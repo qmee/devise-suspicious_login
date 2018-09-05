@@ -1,5 +1,6 @@
 require 'devise'
 require 'devise/suspicious_login/model'
+require 'jwt'
 
 module Devise
   mattr_accessor :expire_token_after
@@ -10,6 +11,9 @@ module Devise
 
   mattr_accessor :suspicious_login_method
   @@suspicious_login_method = -> { false }
+
+  mattr_accessor :jwt_secret
+  @@jwt_secret = "change_me"
 
   module SuspiciousLogin
   end

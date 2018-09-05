@@ -1,7 +1,11 @@
 require_relative 'boot'
 
 require 'rails/all'
+require 'jwt'
+require 'devise'
 require "devise/suspicious_login"
+require "action_mailer/railtie"
+
 
 Bundler.require(*Rails.groups)
 
