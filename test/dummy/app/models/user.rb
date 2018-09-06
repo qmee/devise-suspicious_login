@@ -1,14 +1,9 @@
 class User < ApplicationRecord
-  devise :database_authenticatable, :registerable, :authenticatable,
-         :recoverable, :rememberable, :trackable, :validatable, :suspicious_login
+  devise :database_authenticatable, :registerable, :authenticatable, :trackable, :suspicious_login
 
   has_many :ip_addresses
 
-  def is_suspicious?(val)
-    !!val
-  end
-
-  def send_devise_notification(method, raw=nil, *args)
-    Thread.current[:token] = raw
+  def suspicious_login_attempt?(request = nil)
+    email.include?("suspicious") || dormant_account?
   end
 end

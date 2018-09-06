@@ -1,0 +1,5 @@
+en:
+  devise:
+    failure:
+      user:
+        suspicious_login: "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in."

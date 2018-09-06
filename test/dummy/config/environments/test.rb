@@ -1,4 +1,4 @@
-RailsApp::Application.configure do
+Rails.application.configure do
   config.cache_classes = true
   config.eager_load = false
 
@@ -14,17 +14,6 @@ RailsApp::Application.configure do
   config.action_mailer.perform_caching = false
 
   config.action_mailer.delivery_method = :test
-  # config.action_mailer.default_url_options = { host: 'test.host' }
 
   config.active_support.deprecation = :stderr
-end
-
-class Devise::Mailer < Devise.parent_mailer.constantize
-  include Devise::Mailers::Helpers
-
-  def suspicious_login_instructions(record, unlock_token, opts={})
-    @record = record
-    @unlock_token = ERB::Util.url_encode(unlock_token)
-    devise_mail(record, :suspicious_login_instructions, opts)
-  end
 end
