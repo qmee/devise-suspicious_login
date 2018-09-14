@@ -15,8 +15,8 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
         email: "honest@example.org",
         password: password,
         password_confirmation: password,
-        created_at: Time.now,
-        updated_at: Time.now,
+        created_at: Time.now.utc,
+        updated_at: Time.now.utc,
         last_sign_in_at: 1.day.ago
       )
     end
@@ -31,8 +31,8 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
         email: "dormant@example.org",
         password: password,
         password_confirmation: password,
-        created_at: Time.now,
-        updated_at: Time.now,
+        created_at: Time.now.utc,
+        updated_at: Time.now.utc,
         last_sign_in_at: 1.year.ago
       )
     end
@@ -47,8 +47,8 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
         email: "suspicious@example.org",
         password: password,
         password_confirmation: password,
-        created_at: Time.now,
-        updated_at: Time.now,
+        created_at: Time.now.utc,
+        updated_at: Time.now.utc,
         last_sign_in_at: 1.day.ago
       )
     end
@@ -109,7 +109,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
 
   test 'email not sent after honest user login with recently sent email' do
     user = honest_user
-    user.login_token_sent_at = Time.now
+    user.login_token_sent_at = Time.now.utc
     user.save!
 
     params = {
@@ -126,7 +126,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
 
   test 'email not sent after dormant login with recently sent email' do
     user = dormant_user
-    user.login_token_sent_at = Time.now
+    user.login_token_sent_at = Time.now.utc
     user.save!
 
     params = {
@@ -144,7 +144,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
 
   test 'email not sent after suspicious login with recently sent email' do
     user = suspicious_user
-    user.login_token_sent_at = Time.now
+    user.login_token_sent_at = Time.now.utc
     user.save!
 
     params = {
