@@ -14,7 +14,7 @@ module Devise
       end
 
       def dormant_account?
-        respond_to?(:last_sign_in_at) && Time.now - last_sign_in_at > Devise.dormant_sign_in_after
+        respond_to?(:last_sign_in_at) && !last_sign_in_at.nil? && Time.now - last_sign_in_at > Devise.dormant_sign_in_after
       end
     end
   end
