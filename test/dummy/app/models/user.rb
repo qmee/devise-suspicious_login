@@ -4,6 +4,6 @@ class User < ApplicationRecord
   has_many :ip_addresses
 
   def suspicious_login_attempt?(request = nil)
-    email.include?("suspicious") || dormant_account?
+    email.include?("suspicious")
   end
 end

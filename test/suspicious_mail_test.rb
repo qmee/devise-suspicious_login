@@ -6,62 +6,14 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     Devise.mailer_sender = 'test@example.com'
   end
 
-  def honest_user
-    password = "password"
-
-    @dormant_user ||= begin
-      User.create!(
-        id: 1,
-        email: "honest@example.org",
-        password: password,
-        password_confirmation: password,
-        created_at: Time.now.utc,
-        updated_at: Time.now.utc,
-        last_sign_in_at: 1.day.ago
-      )
-    end
-  end
-
-  def dormant_user
-    password = "password"
-
-    @dormant_user ||= begin
-      User.create!(
-        id: 2,
-        email: "dormant@example.org",
-        password: password,
-        password_confirmation: password,
-        created_at: Time.now.utc,
-        updated_at: Time.now.utc,
-        last_sign_in_at: 1.year.ago
-      )
-    end
-  end
-
-  def suspicious_user
-    password = "password"
-
-    @suspicious_user ||= begin
-      User.create!(
-        id: 3,
-        email: "suspicious@example.org",
-        password: password,
-        password_confirmation: password,
-        created_at: Time.now.utc,
-        updated_at: Time.now.utc,
-        last_sign_in_at: 1.day.ago
-      )
-    end
-  end
-
   def mail
     @mail ||= begin
       ActionMailer::Base.deliveries.first
     end
   end
 
-  test 'email not send after honest user login' do
-    user = honest_user
+  test 'new user - email not sent' do
+    user = create(:new_user)
 
     params = {
       user: {
@@ -75,8 +27,38 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_nil mail
   end
 
-  test 'email send after dormant login' do
-    user = dormant_user
+  test 'user with honest login - email not sent' do
+    user = create(:user_with_honest_login)
+
+    params = {
+      user: {
+        email: user.email,
+        password: "password"
+      }
+    }
+
+    post user_session_path, params: params
+    assert_redirected_to 'http://www.example.com/'
+    assert_nil mail
+  end
+
+  test 'user with dormant login from same ip - email sent' do
+    user = create(:user_with_dormant_login_from_same_ip)
+
+    params = {
+      user: {
+        email: user.email,
+        password: "password"
+      }
+    }
+
+    post user_session_path, params: params
+    assert_redirected_to 'http://www.example.com/'
+    assert_nil mail
+  end
+
+  test 'user with dormant login from different ip - email sent' do
+    user = create(:user_with_dormant_login_from_different_ip)
 
     params = {
       user: {
@@ -91,8 +73,8 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
 
-  test 'email sent after suspicious login' do
-    user = suspicious_user
+  test 'user with suspicious login – email not sent' do
+    user = create(:user_with_suspicious_login)
 
     params = {
       user: {
@@ -107,27 +89,10 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
 
-  test 'email not sent after honest user login with recently sent email' do
-    user = honest_user
-    user.login_token_sent_at = Time.now.utc
-    user.save!
+  #####
 
-    params = {
-      user: {
-        email: user.email,
-        password: "password"
-      }
-    }
-
-    post user_session_path, params: params
-    assert_redirected_to 'http://www.example.com/'
-    assert_nil mail
-  end
-
-  test 'email not sent after dormant login with recently sent email' do
-    user = dormant_user
-    user.login_token_sent_at = Time.now.utc
-    user.save!
+  test 'user with dormant login from different ip and recently sent login token - email not sent' do
+    user = create(:user_with_dormant_login_from_different_ip_and_recently_sent_login_token)
 
     params = {
       user: {
@@ -142,10 +107,8 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
 
-  test 'email not sent after suspicious login with recently sent email' do
-    user = suspicious_user
-    user.login_token_sent_at = Time.now.utc
-    user.save!
+  test 'user with suspicious login and recently sent login token - email not sent' do
+    user = create(:user_with_suspicious_login_and_recently_sent_login_token)
 
     params = {
       user: {

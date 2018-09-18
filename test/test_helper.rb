@@ -4,6 +4,18 @@ require_relative "../test/dummy/config/environment"
 ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../test/dummy/db/migrate", __dir__)]
 ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __dir__)
 require "rails/test_help"
+require "factory_bot"
+
+FactoryBot.definition_file_paths = [
+  File.join(Dir.pwd, 'test', 'factories')
+]
+
+FactoryBot.find_definitions
+
+class ActionDispatch::IntegrationTest
+  include FactoryBot::Syntax::Methods
+end
+
 
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
