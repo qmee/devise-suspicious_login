@@ -1,0 +1,14 @@
+en:
+  devise:
+    failure:
+      already_authenticated: ""
+      inactive: ""
+      invalid: "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in."
+      locked: "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in."
+      last_attempt: "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in."
+      not_found_in_database: "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in."
+      timeout: "Your session expired. Please log in again to continue."
+      unauthenticated: "You need to log in or sign up before continuing."
+      unconfirmed: ""
+      user:
+        suspicious_login: "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in."
