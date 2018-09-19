@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180910104707) do
+ActiveRecord::Schema.define(version: 20180919081730) do
 
   create_table "users", force: :cascade do |t|
     t.string "unique_session_id", limit: 20
@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 20180910104707) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.integer "sign_in_count", default: 0, null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.index ["email"], name: "index_users_on_email"
     t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
   end

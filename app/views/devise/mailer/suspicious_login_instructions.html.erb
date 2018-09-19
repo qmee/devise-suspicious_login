@@ -1,2 +1,6 @@
 <p><%= "Hi #{@resource.email}" %></p>
-<p>We noticed a recent suspicious login attempt</p>
+<p>We noticed a new login to you Qmee account</p>
+<p><strong>If this was you:</strong></p>
+<p>You don't need to do anything!</p>
+<p><strong>If this wasn't you:</strong></p>
+<p>Your account may have been compromised and you should <%= link_to("reset your password now.", edit_user_password_url(@resource, reset_password_token: @reset_password_token)) %></p>

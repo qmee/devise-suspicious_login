@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  devise :database_authenticatable, :registerable, :authenticatable, :trackable, :suspicious_login
+  devise :database_authenticatable, :recoverable, :registerable, :authenticatable, :trackable, :suspicious_login
 
   has_many :ip_addresses
 

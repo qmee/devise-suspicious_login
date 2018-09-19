@@ -89,8 +89,6 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
 
-  #####
-
   test 'user with dormant login from different ip and recently sent login token - email not sent' do
     user = create(:user_with_dormant_login_from_different_ip_and_recently_sent_login_token)
 
