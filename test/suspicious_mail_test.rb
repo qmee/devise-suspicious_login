@@ -120,4 +120,18 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_nil mail
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
+
+  test 'user with suspicious login and no token' do
+    user = create(:user_with_suspicious_login_and_recently_sent_login_token)
+
+    get root_path
+    assert_redirected_to new_user_session_path
+  end
+
+  test 'user with suspicious login and valid token' do
+    user = create(:user_with_suspicious_login_and_recently_sent_login_token)
+
+    get root_path(login_token: "TOKEN")
+    assert_response :success
+  end
 end

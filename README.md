@@ -41,10 +41,10 @@ end
 ```ruby
 Devise.setup do |config|
   # Period of time to expire token after login_tokens
-  # config.expire_token_after = 10.minutes
+  # config.expire_login_token_after = 10.minutes
 
   # Period of time to wait before resending another email for a suspicious login
-  # config.resend_token_after = 1.minute
+  # config.resend_login_token_after = 1.minute
 
   # Period of time after which a user is considered to be dormant and a login treated as suspicious
   # dormant_sign_in_after = 3.months

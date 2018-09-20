@@ -1,8 +1,9 @@
 module SuspiciousLogin
   module Mailer
-    def suspicious_login_instructions(record, token, opts={})
+    def suspicious_login_instructions(record, token=nil, opts={})
       @record = record
-      @token = ERB::Util.url_encode(token)
+      @token = Devise.token_generator.generate(record.class, :login_token) if token.nil?
+      @token = ERB::Util.url_encode(@token)
       raw, @reset_password_token = Devise.token_generator.generate(record.class, :reset_password_token)
       record.login_token = @token
       record.login_token_sent_at = Time.now.utc
