@@ -19,17 +19,14 @@ module Devise
   mattr_accessor :dormant_sign_in_after
   @@dormant_sign_in_after = 3.months
 
-  mattr_accessor :suspicious_login_home_page
-  @@suspicious_login_home_page = nil
-
   mattr_accessor :token_field_name
   @@token_field_name = :login_token
 
   mattr_accessor :token_created_at_field_name
   @@token_created_at_field_name = :login_token_sent_at
 
-  mattr_accessor :user_identifier_field_name
-  @@user_identifier_field_name = :email
+  mattr_accessor :clear_token_on_login
+  @@clear_token_on_login = true
 end
 
 I18n.load_path.unshift File.join(File.dirname(__FILE__), *%w[suspicious_login locales en.yml])

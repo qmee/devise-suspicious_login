@@ -4,6 +4,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     setup_mailer
     Devise.mailer = Devise::Mailer
     Devise.mailer_sender = 'test@example.com'
+    Devise.clear_token_on_login = true
   end
 
   def mail
@@ -128,7 +129,9 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_user_session_path
   end
 
-  test 'user with suspicious login and valid token' do
+  test 'user with suspicious login and valid token and config.clear_token_on_login=true' do
+    Devise.clear_token_on_login = true
+
     user = create(:user_with_suspicious_login_and_recently_sent_login_token)
     params = {
       login_token: "TOKEN",
@@ -136,5 +139,24 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     }
     get root_path(params)
     assert_response :success
+
+    user = User.find(user.id)
+    assert_nil user[Devise.token_field_name]
+    assert_nil user[Devise.token_created_at_field_name]
+  end
+
+  test 'user with suspicious login and valid token and config.clear_token_on_login=false' do
+    Devise.clear_token_on_login = false
+    user = create(:user_with_suspicious_login_and_recently_sent_login_token)
+    params = {
+      login_token: "TOKEN",
+      email: user.email
+    }
+    get root_path(params)
+    assert_response :success
+
+    user = User.find(user.id)
+    assert_equal user[Devise.token_field_name], "TOKEN"
+    assert_not_nil user[Devise.token_created_at_field_name]
   end
 end

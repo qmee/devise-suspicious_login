@@ -32,15 +32,14 @@ module Devise
         save(validate: false)
       end
 
-      def ensure_suspicious_login_token(token=nil)
-        reset_suspicious_login_token(token) if self[token_field_name].blank?
-      end
-
-      def ensure_suspicious_login_token!(token=nil)
-        reset_suspicious_login_token!(token) if self[token_field_name].blank?
+      def clear_suspicious_login_token!
+        self[Devise.token_field_name] = nil
+        self[Devise.token_created_at_field_name] = nil
+        save(validate: false)
       end
 
       def after_login_token_authentication
+        clear_suspicious_login_token! if Devise.clear_token_on_login
         @token_login = true
       end
 

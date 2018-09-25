@@ -48,6 +48,15 @@ Devise.setup do |config|
 
   # Period of time after which a user is considered to be dormant and a login treated as suspicious
   # dormant_sign_in_after = 3.months
+
+  # Column to store login token for resource
+  # config.token_field_name = :login_token
+
+  # Column to store login token create time for resource
+  # config.token_created_at_field_name = :login_token_sent_at
+
+  # Clear token on login (token can only be used once)
+  # config.clear_token_on_login = true
 end
 
 The generator adds optional configurations to `config/initializers/devise-security.rb`. Enable
