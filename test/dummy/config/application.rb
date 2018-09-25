@@ -14,4 +14,3 @@ module Dummy
     config.secret_key_base = 'change_me'
   end
 end
-

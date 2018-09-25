@@ -1,7 +1,7 @@
 <h2><%= "Hi #{@resource.email}" %></h2>
 <p>We noticed a new login to your account</p>
-<h4>If this was you:</strong></h4>
+<h4>If this was you:</h4>
 <p>Click the login link below to config and log in</p>
-<p><%= link_to("Log in", "#{Devise.suspicious_login_home_page}?token=#{@token}" || root_url(token: @token)) %></p>
-<h4>If this wasn't you:</strong></h4>
+<p><%= link_to("Log in", new_user_session_url(login_token: @token, email: @resource.email)) %></p>
+<h4>If this wasn't you:</h4>
 <p>Your account may have been compromised and you should <%= link_to("reset your password now.", edit_user_password_url(@resource, reset_password_token: @reset_password_token)) %></p>

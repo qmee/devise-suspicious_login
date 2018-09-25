@@ -130,8 +130,11 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
 
   test 'user with suspicious login and valid token' do
     user = create(:user_with_suspicious_login_and_recently_sent_login_token)
-
-    get root_path(login_token: "TOKEN")
+    params = {
+      login_token: "TOKEN",
+      email: user.email
+    }
+    get root_path(params)
     assert_response :success
   end
 end
