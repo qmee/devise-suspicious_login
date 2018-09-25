@@ -160,4 +160,52 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal user[Devise.token_field_name], "TOKEN"
     assert_not_nil user[Devise.token_created_at_field_name]
   end
+
+  test 'user with suspicious login and valid but expired token' do
+    Devise.clear_token_on_login = false
+
+    user = create(:user_with_suspicious_login_and_ancient_login_token)
+    params = {
+      login_token: "TOKEN",
+      email: user.email
+    }
+    get root_path(params)
+    assert_redirected_to new_user_session_path
+
+    user = User.find(user.id)
+    assert_equal user[Devise.token_field_name], "TOKEN"
+    assert_not_nil user[Devise.token_created_at_field_name]
+  end
+
+  test 'user with suspicious login and invalid token and config.clear_token_on_login=true' do
+    Devise.clear_token_on_login = true
+
+    user = create(:user_with_suspicious_login_and_recently_sent_login_token)
+    params = {
+      login_token: "WRONG TOKEN",
+      email: user.email
+    }
+    get root_path(params)
+    assert_redirected_to new_user_session_path
+
+    user = User.find(user.id)
+    assert_equal user[Devise.token_field_name], "TOKEN"
+    assert_not_nil user[Devise.token_created_at_field_name]
+  end
+
+  test 'user with suspicious login and invalid token and config.clear_token_on_login=false' do
+    Devise.clear_token_on_login = false
+
+    user = create(:user_with_suspicious_login_and_recently_sent_login_token)
+    params = {
+      login_token: "WRONG TOKEN",
+      email: user.email
+    }
+    get root_path(params)
+    assert_redirected_to new_user_session_path
+
+    user = User.find(user.id)
+    assert_equal user[Devise.token_field_name], "TOKEN"
+    assert_not_nil user[Devise.token_created_at_field_name]
+  end
 end
