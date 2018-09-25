@@ -147,6 +147,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
 
   test 'user with suspicious login and valid token and config.clear_token_on_login=false' do
     Devise.clear_token_on_login = false
+
     user = create(:user_with_suspicious_login_and_recently_sent_login_token)
     params = {
       login_token: "TOKEN",

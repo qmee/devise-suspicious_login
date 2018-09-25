@@ -14,13 +14,16 @@ module Devise
       def authenticate!
         resource = resource_email && mapping.to.find_by(:email => resource_email)
 
-        if resource && Devise.secure_compare(resource[Devise.token_field_name], login_token)
-          resource.after_login_token_authentication
-          success!(resource)
+        if resource
+          if Time.now.utc < (resource[Devise.token_created_at_field_name] + token_expires_after.to_i) && Devise.secure_compare(resource[Devise.token_field_name], login_token)
+            resource.after_login_token_authentication
+            return success!(resource)
+          end
         else
           Devise.secure_compare("foo", login_token)
-          fail!
+          return fail!
         end
+        fail!
       end
 
       private
@@ -42,7 +45,7 @@ module Devise
       end
 
       def token_expires_after
-        @token_expires_after ||= Devise.token_expires_after
+        @token_expires_after ||= Devise.expire_login_token_after
       end
     end
   end
