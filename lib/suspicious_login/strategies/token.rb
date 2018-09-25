@@ -15,7 +15,7 @@ module Devise
         resource = resource_email && mapping.to.find_by(:email => resource_email)
 
         if resource
-          if Time.now.utc < (resource[Devise.token_created_at_field_name] + token_expires_after.to_i) && Devise.secure_compare(resource[Devise.token_field_name], login_token)
+          if Time.now.utc.to_i < (resource[Devise.token_created_at_field_name].to_i + token_expires_after.to_i) && Devise.secure_compare(resource[Devise.token_field_name], login_token)
             resource.after_login_token_authentication
             return success!(resource)
           end
