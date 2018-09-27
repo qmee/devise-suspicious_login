@@ -2,6 +2,9 @@ module SuspiciousLogin
   autoload :Schema, 'suspcious_login/schema'
   autoload :Patches, 'suspicious_login/patches'
   autoload :Mailer, 'suspicious_login/mailer'
+
+  class MissingModelError < StandardError; end
+  class DeviseMissingFromModel < StandardError; end
 end
 
 require 'devise'

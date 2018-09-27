@@ -8,29 +8,28 @@ if DEVISE_ORM == :active_record
     destination File.expand_path('../../tmp', __FILE__)
     setup :prepare_destination
 
-    test "all files created with correct syntax" do
-      run_generator %w(foo)
-      assert_migration "db/migrate/devise_create_foos.rb", /def change/
-    end
-
-    test "update model migration when model exists" do
+    test "update model migration when model exists in test mode" do
       run_generator %w(foo)
       assert_file "app/models/foo.rb"
       run_generator %w(foo)
       assert_migration "db/migrate/add_devise_suspicious_login_to_foos.rb", /#{Devise.token_field_name}/
     end
 
-    test "all files are deleted" do
+    test "raise error if model is not present when not in test mode" do
+      Rails.env = 'prod'
+      assert_raise SuspiciousLogin::MissingModelError do
+        run_generator %w(foo)
+      end
+      Rails.env = 'test'
+      assert_no_file "app/models/foo.rb"
+    end
+
+    test "all files are deleted except the model" do
       run_generator %w(foo)
       run_generator %w(foo)
-      assert_migration "db/migrate/devise_create_foos.rb"
       assert_migration "db/migrate/add_devise_suspicious_login_to_foos.rb"
       run_generator %w(foo), behavior: :revoke
       assert_no_migration "db/migrate/add_devise_suspicious_login_to_foos.rb"
-      assert_migration "db/migrate/devise_create_foos.rb"
-      run_generator %w(foo), behavior: :revoke
-      assert_no_migration "db/migrate/devise_create_foos.rb"
-      assert_no_file "app/models/foo.rb"
     end
   end
 end

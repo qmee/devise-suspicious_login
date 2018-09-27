@@ -5,6 +5,10 @@ module Devise
     module SuspiciousLogin
       extend ActiveSupport::Concern
 
+      def self.required_fields(klass)
+        [Devise.token_field_name, Devise.token_created_at_field_name]
+      end
+
       module ClassMethods
         def login_token
           loop do

@@ -1,0 +1,8 @@
+en:
+  devise:
+    installer:
+      missing_modules:
+        one: "The following devise module is missing from your model and has been automatically added -> :%{missing_modules}.\n\n"
+        other: "The following devise modules are missing from your model and have been automatically added -> :%{missing_modules}.\n\n"
+      missing_model: "Model %{name} does not exist."
+      devise_missing: "Devise not found on %{name}"

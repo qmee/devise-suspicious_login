@@ -7,6 +7,10 @@ module SuspiciousLogin
       def create_initializer
         template('suspicious_login.rb', 'config/initializers/suspicious_login.rb')
       end
+
+      def copy_locale
+        copy_file "../../../config/locales/en.yml", "config/locales/suspicious_login.en.yml"
+      end
     end
   end
 end
