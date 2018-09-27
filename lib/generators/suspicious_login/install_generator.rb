@@ -11,6 +11,10 @@ module SuspiciousLogin
       def copy_locale
         copy_file "../../../config/locales/en.yml", "config/locales/suspicious_login.en.yml"
       end
+
+      def prepend_application_file
+        application "require 'suspicious_login'"
+      end
     end
   end
 end

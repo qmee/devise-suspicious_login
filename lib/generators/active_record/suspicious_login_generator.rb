@@ -49,7 +49,7 @@ RUBY
 
           if behavior == :invoke
             devise_content = devise_modules_re.match(content)&.[](0)
-            p devise_missing_modules = missing_modules(devise_content)
+            devise_missing_modules = missing_modules(devise_content)
             if devise_content && devise_missing_modules
               updated_devise_content = devise_missing_modules.reduce(devise_content) { |acc, mod| "#{acc}, :#{mod.to_s}" }
               puts I18n.t('devise.installer.missing_modules', missing_modules: devise_missing_modules.join(', '), count: devise_missing_modules.length) if devise_missing_modules.any? && gsub_file(model_path, devise_modules_re, updated_devise_content) > 0
