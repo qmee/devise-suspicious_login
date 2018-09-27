@@ -13,6 +13,7 @@ module SuspiciousLogin
       end
 
       def prepend_application_file
+        create_file "config/application.rb", "module Rails\n  class Application < Rails::Application\n  end\nend" if Rails.env.test?
         application "require 'suspicious_login'"
       end
     end
