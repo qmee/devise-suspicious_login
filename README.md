@@ -10,7 +10,48 @@ gem 'devise-suspicious_login
 
 Run `bundle` command to install.
 
+
+### Quick Installation
+
+Quick Installation should work on most default rails apps.
+
+Run the install generator:
+
+`rails generate suspicious_login:install`
+
+to install the relevant config files `config/initializers/suspicious_login.rb` with default settings.
+
+Next run the ActiveRecord generator for each model you want to enable suspicious_login detection for.
+
+`rails generate active_record:suspicious_login User`
+
+will update and configure the User model automatically. This will also automatically create a database migration that adds the necessary fields to the User model.
+
+Run this migration wih
+
+`rails db:migrate`
+
+By default only dormant users (3 months without a login by default setting) are considered suspicious. Suspicious check for dormant users can be turned of by setting:
+
+```ruby
+config.dormant_sign_in after = nil
+```
+
+To add a custom suspicious check for a model simply define a method `suspicious_login_attempt?(request)` eg:
+
+```ruby
+# request parameter contains the contents of the rails request
+def suspicious_login_attempt?(request)
+  if request.ip.botnet? return true
+  false
+end
+```
+
+
+### Manual Installation
+
 Once installed you need to add `login_token` and `login_token_sent_at` fields to any resources (eg User) that will use need this feature. Below shows how to add this to the `User` model.
+
 
 ```ruby
 # For a new migration for the users table, define a migration as follows:
@@ -55,15 +96,9 @@ Devise.setup do |config|
   # Column to store login token create time for resource
   # config.token_created_at_field_name = :login_token_sent_at
 
-  # Clear token on login (token can only be used once)
+  # Clear token on login (allows tokens to be one time use only)
   # config.clear_token_on_login = true
 end
-
-The generator adds optional configurations to `config/initializers/devise-security.rb`. Enable
-the modules you wish to use in the initializer you are ready to add Devise Security modules on top of Devise modules to any of your Devise models:
-
-```ruby
-devise :password_expirable, :secure_validatable, :password_archivable, :session_limitable, :expirable
 ```
 
 ## Requirements

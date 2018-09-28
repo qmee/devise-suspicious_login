@@ -33,20 +33,20 @@ module ActiveRecord
       end
 
       def add_warden_strategy
-        if File.exist?('config/initializers/suspicious_login.rb')
-          content = File.read('config/initializers/suspicious_login.rb')
+        template('../../templates/suspicious_login.rb', 'config/initializers/suspicious_login.rb') unless File.exist?(File.join(destination_root, 'config/initializers/suspicious_login.rb'))
 
-          if content.include?("config.warden do |manager|\n")
-            inject_into_file 'config/initializers/suspicious_login.rb', :after => "config.warden do |manager|\n" do
-              "    manager.default_strategies(:scope => :#{name.downcase.to_sym}).unshift :suspicious_login_token\n"
-            end
-          else
-            inject_into_file 'config/initializers/suspicious_login.rb', :after => "Devise.setup do |config|" do
-              """  config.warden do |manager|
-                  manager.default_strategies(:scope => :#{name.downcase.to_sym}).unshift :suspicious_login_token
-                end
-              """
-            end
+        content = File.read(File.join(destination_root, 'config/initializers/suspicious_login.rb'))
+
+        if content.include?("config.warden do |manager|\n")
+          inject_into_file 'config/initializers/suspicious_login.rb', :after => "config.warden do |manager|\n" do
+            "    manager.default_strategies(:scope => :#{name.downcase.to_sym}).unshift :suspicious_login_token\n"
+          end
+        else
+          inject_into_file 'config/initializers/suspicious_login.rb', :after => "Devise.setup do |config|" do
+            """  config.warden do |manager|
+                manager.default_strategies(:scope => :#{name.downcase.to_sym}).unshift :suspicious_login_token
+              end
+            """
           end
         end
       end

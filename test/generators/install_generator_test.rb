@@ -8,7 +8,7 @@ class InstallGeneratorTest < Rails::Generators::TestCase
 
   test "assert all files created" do
     run_generator
-    assert_file "config/initializers/suspicious_login.rb", /SuspiciousLogin Extension/
+    assert_file "config/initializers/suspicious_login.rb", /config\.warden do \|manager\|\n/
     assert_file "config/locales/suspicious_login.en.yml", /missing_modules:/
     assert_file "config/application.rb", /require 'suspicious_login'/
   end

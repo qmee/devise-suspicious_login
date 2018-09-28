@@ -37,7 +37,7 @@ module Devise
       end
 
       def reset_suspicious_login_token!(token=nil)
-        p token = reset_suspicious_login_token(token)
+        token = reset_suspicious_login_token(token)
         save(validate: false)
         token
       end

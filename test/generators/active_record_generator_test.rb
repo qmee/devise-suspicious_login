@@ -24,6 +24,11 @@ if DEVISE_ORM == :active_record
       assert_no_file "app/models/foo.rb"
     end
 
+    test "append warden strategy to model" do
+      run_generator %w(foo)
+      assert_file "config/initializers/suspicious_login.rb", /manager\.default_strategies\(:scope => :foo\)\.unshift :suspicious_login_token/
+    end
+
     test "all files are deleted except the model" do
       run_generator %w(foo)
       run_generator %w(foo)
