@@ -9,31 +9,37 @@ module Devise
         [Devise.token_field_name, Devise.token_created_at_field_name]
       end
 
-      module ClassMethods
-        def login_token
-          loop do
-            token = Devise.friendly_token
-            break token unless to_adapter.find_first(Hash[Devise.token_field_name, token])
-          end
+      def generate_login_token
+        loop do
+          token = Devise.friendly_token
+          break token unless User.where(authentication_token: token).first
         end
-
       end
 
-      def generate_reset_password_token!
+      def generate_reset_password_token
         raw, enc = Devise.token_generator.generate(self.class, :reset_password_token)
-        reset_password_token = enc
-        reset_password_sent_at = Time.now.utc
-        save(validate: false)
+        self.reset_password_token = enc
+        self.reset_password_sent_at = Time.now.utc
+        raw
       end
 
       def reset_suspicious_login_token(token=nil)
-        self[Devise.token_field_name] = token || self.class.login_token
+        token = token || generate_login_token
+        self[Devise.token_field_name] = token
         self[Devise.token_created_at_field_name] = Time.now.utc unless Devise.expire_login_token_after.blank?
+        token
+      end
+
+      def generate_reset_password_token!
+        token = generate_reset_password_token
+        save(validate: false)
+        token
       end
 
       def reset_suspicious_login_token!(token=nil)
-        reset_suspicious_login_token(token)
+        p token = reset_suspicious_login_token(token)
         save(validate: false)
+        token
       end
 
       def clear_suspicious_login_token!
