@@ -22,6 +22,5 @@ Devise.setup do |config|
   # config.clear_token_on_login = true
 
   config.warden do |manager|
-    manager.default_strategies.unshift :suspicious_login_token
   end
 end
