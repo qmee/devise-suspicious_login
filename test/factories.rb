@@ -14,12 +14,15 @@ FactoryBot.define do
     updated_at      { Time.now.utc }
 
     factory :user_with_honest_login do
-      last_sign_in_ip    { '127.0.0.1' }
-      last_sign_in_at    { 1.day.ago.utc }
+      last_sign_in_ip    { '127.0.0.2' }
+      current_sign_in_ip { '127.0.0.3' }
+      last_sign_in_at    { 2.days.ago.utc }
+      current_sign_in_at { 1.day.ago.utc }
     end
 
     factory :user_with_dormant_login do
       last_sign_in_at    { 1.year.ago.utc }
+      current_sign_in_at { 6.months.ago.utc }
 
       factory :user_with_dormant_login_from_same_ip do
         last_sign_in_ip    { '127.0.0.1' }
@@ -27,7 +30,7 @@ FactoryBot.define do
       end
 
       factory :user_with_dormant_login_from_different_ip do
-        last_sign_in_ip    { '127.0.0.1' }
+        last_sign_in_ip    { '127.0.0.2' }
         current_sign_in_ip { '127.0.0.3' }
 
         factory :user_with_dormant_login_from_different_ip_and_recently_sent_login_token do

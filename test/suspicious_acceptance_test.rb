@@ -13,7 +13,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'new user - email not sent' do
+  test 'new user' do
     user = create(:new_user)
 
     params = {
@@ -24,11 +24,11 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     }
 
     post user_session_path, params: params
-    assert_redirected_to 'http://www.example.com/'
+    assert_redirected_to root_path
     assert_nil mail
   end
 
-  test 'user with honest login - email not sent' do
+  test 'user with honest login' do
     user = create(:user_with_honest_login)
 
     params = {
@@ -39,11 +39,11 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     }
 
     post user_session_path, params: params
-    assert_redirected_to 'http://www.example.com/'
+    assert_redirected_to root_path
     assert_nil mail
   end
 
-  test 'user with dormant login from same ip - email sent' do
+  test 'user with dormant login from same ip' do
     user = create(:user_with_dormant_login_from_same_ip)
 
     params = {
@@ -54,11 +54,11 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     }
 
     post user_session_path, params: params
-    assert_redirected_to 'http://www.example.com/'
+    assert_redirected_to root_path
     assert_nil mail
   end
 
-  test 'user with dormant login from different ip - email sent' do
+  test 'user with dormant login from different ip' do
     user = create(:user_with_dormant_login_from_different_ip)
 
     params = {
@@ -74,7 +74,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
 
-  test 'user with suspicious login – email not sent' do
+  test 'user with suspicious login' do
     user = create(:user_with_suspicious_login)
 
     params = {
@@ -207,5 +207,62 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     user = User.find(user.id)
     assert_equal user[Devise.token_field_name], "TOKEN"
     assert_not_nil user[Devise.token_created_at_field_name]
+  end
+
+  test 'multiple failed signins does not update trackable data' do
+    user = create(:user_with_dormant_login_from_different_ip)
+
+    params = {
+      user: {
+        email: user.email,
+        password: "password"
+      }
+    }
+
+    last_sign_in_at = user.last_sign_in_at
+    current_sign_in_at = user.current_sign_in_at
+    last_sign_in_ip = user.last_sign_in_ip
+    current_sign_in_ip = user.current_sign_in_ip
+
+    post user_session_path, params: params
+    assert_redirected_to new_user_session_path
+    user.reload
+    assert_equal user.last_sign_in_at, last_sign_in_at
+    assert_equal user.current_sign_in_at, current_sign_in_at
+    assert_equal user.last_sign_in_ip, last_sign_in_ip
+    assert_equal user.current_sign_in_ip, current_sign_in_ip
+
+    post user_session_path, params: params
+    assert_redirected_to new_user_session_path
+    user.reload
+    assert_equal user.last_sign_in_at, last_sign_in_at
+    assert_equal user.current_sign_in_at, current_sign_in_at
+    assert_equal user.last_sign_in_ip, last_sign_in_ip
+    assert_equal user.current_sign_in_ip, current_sign_in_ip
+  end
+
+  test 'successful login updates trackable fields correctly' do
+    user = create(:user_with_honest_login)
+
+    params = {
+      user: {
+        email: user.email,
+        password: "password"
+      }
+    }
+
+    last_sign_in_at = user.last_sign_in_at
+    current_sign_in_at = user.current_sign_in_at
+    last_sign_in_ip = user.last_sign_in_ip
+    current_sign_in_ip = user.current_sign_in_ip
+
+    post user_session_path, params: params
+    assert_redirected_to root_path
+
+    user.reload
+    assert_equal user.last_sign_in_at, current_sign_in_at
+    assert user.current_sign_in_at > current_sign_in_at
+    assert_equal user.last_sign_in_ip, current_sign_in_ip
+    assert_equal user.current_sign_in_ip, '127.0.0.1'
   end
 end
