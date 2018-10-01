@@ -21,9 +21,9 @@ module Devise
           end
         else
           Devise.secure_compare("foo", login_token)
+          throw(:warden, message: I18n.t('devise.failure.invalid'))
           return fail!
         end
-        fail!
       end
 
       private
