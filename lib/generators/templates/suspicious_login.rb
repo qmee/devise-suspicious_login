@@ -16,7 +16,7 @@ Devise.setup do |config|
   # config.token_field_name = :login_token
 
   # Resource field that will be used to store the token_created_at time
-  # config.created_at_field_name = :login_token_sent_at
+  # config.token_created_at_field_name = :login_token_sent_at
 
   # Clear login_token after user login (true means each token can only be used once)
   # config.clear_token_on_login = true
