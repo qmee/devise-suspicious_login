@@ -72,7 +72,7 @@ module Devise
         !current_sign_in_ip.nil? &&
         request.remote_ip != last_sign_in_ip &&
         request.remote_ip != current_sign_in_ip &&
-        Time.now.utc - last_sign_in_at > Devise.dormant_sign_in_after
+        Time.now.utc - current_sign_in_at > Devise.dormant_sign_in_after
       end
     end
   end
