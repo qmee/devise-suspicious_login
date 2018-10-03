@@ -54,7 +54,7 @@ module Devise
       end
 
       def suspicious?(request = {})
-        respond_to?(:suspicious_login_attempt?) ? suspicious_login_attempt?(request) || dormant_account? : dormant_account?
+        respond_to?(:suspicious_login_attempt?) ? suspicious_login_attempt?(request) || dormant_account?(request) : dormant_account?(request)
       end
 
       def send_suspicious_login_instructions
@@ -65,10 +65,13 @@ module Devise
         @token_login || false
       end
 
-      def dormant_account?
-        respond_to?(:last_sign_in_at) &&
+      def dormant_account?(request)
+        return true if !(respond_to?(:last_sign_in_at))
+
         !last_sign_in_at.nil? &&
-        last_sign_in_ip != current_sign_in_ip &&
+        !current_sign_in_ip.nil? &&
+        request.remote_ip != last_sign_in_ip &&
+        request.remote_ip != current_sign_in_ip &&
         Time.now.utc - last_sign_in_at > Devise.dormant_sign_in_after
       end
     end

@@ -1,10 +1,10 @@
-
 class SuspiciousMailTest < ActionDispatch::IntegrationTest
   def setup
     setup_mailer
     Devise.mailer = Devise::Mailer
     Devise.mailer_sender = 'test@example.com'
     Devise.clear_token_on_login = true
+    @@default_ip = '127.0.0.4'
   end
 
   def mail
@@ -44,8 +44,9 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
   end
 
   test 'user with dormant login from same ip' do
-    user = create(:user_with_dormant_login_from_same_ip)
+    user = create(:user_with_dormant_login)
 
+    @@default_ip = '127.0.0.1'
     params = {
       user: {
         email: user.email,
@@ -59,7 +60,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
   end
 
   test 'user with dormant login from different ip' do
-    user = create(:user_with_dormant_login_from_different_ip)
+    user = create(:user_with_dormant_login)
 
     params = {
       user: {
@@ -90,8 +91,8 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
 
-  test 'user with dormant login from different ip and recently sent login token - email not sent' do
-    user = create(:user_with_dormant_login_from_different_ip_and_recently_sent_login_token)
+  test 'user with dormant login from different ip and recently sent login token' do
+    user = create(:user_with_dormant_login_and_recently_sent_login_token)
 
     params = {
       user: {
@@ -106,7 +107,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in.", flash[:alert]
   end
 
-  test 'user with suspicious login and recently sent login token - email not sent' do
+  test 'user with suspicious login and recently sent login token' do
     user = create(:user_with_suspicious_login_and_recently_sent_login_token)
 
     params = {
@@ -210,7 +211,7 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
   end
 
   test 'multiple failed signins does not update trackable data' do
-    user = create(:user_with_dormant_login_from_different_ip)
+    user = create(:user_with_dormant_login)
 
     params = {
       user: {
@@ -263,6 +264,6 @@ class SuspiciousMailTest < ActionDispatch::IntegrationTest
     assert_equal user.last_sign_in_at, current_sign_in_at
     assert user.current_sign_in_at > current_sign_in_at
     assert_equal user.last_sign_in_ip, current_sign_in_ip
-    assert_equal user.current_sign_in_ip, '127.0.0.1'
+    assert_equal user.current_sign_in_ip, '127.0.0.4'
   end
 end

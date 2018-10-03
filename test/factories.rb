@@ -12,10 +12,10 @@ FactoryBot.define do
     password        { 'password' }
     created_at      { Time.now.utc }
     updated_at      { Time.now.utc }
+    last_sign_in_ip    { '127.0.0.1' }
+    current_sign_in_ip { '127.0.0.2' }
 
     factory :user_with_honest_login do
-      last_sign_in_ip    { '127.0.0.2' }
-      current_sign_in_ip { '127.0.0.3' }
       last_sign_in_at    { 2.days.ago.utc }
       current_sign_in_at { 1.day.ago.utc }
     end
@@ -24,26 +24,13 @@ FactoryBot.define do
       last_sign_in_at    { 1.year.ago.utc }
       current_sign_in_at { 6.months.ago.utc }
 
-      factory :user_with_dormant_login_from_same_ip do
-        last_sign_in_ip    { '127.0.0.1' }
-        current_sign_in_ip { '127.0.0.1' }
-      end
-
-      factory :user_with_dormant_login_from_different_ip do
-        last_sign_in_ip    { '127.0.0.2' }
-        current_sign_in_ip { '127.0.0.3' }
-
-        factory :user_with_dormant_login_from_different_ip_and_recently_sent_login_token do
-          login_token_sent_at { Time.now.utc }
-          login_token { "TOKEN" }
-        end
-
+      factory :user_with_dormant_login_and_recently_sent_login_token do
+        login_token_sent_at { Time.now.utc }
+        login_token { "TOKEN" }
       end
     end
 
     factory :user_with_suspicious_login do
-      last_sign_in_ip    { '127.0.0.1' }
-      current_sign_in_ip { '127.0.0.1' }
       email { 'suspicious@example.org' }
 
       factory :user_with_suspicious_login_and_recently_sent_login_token do
