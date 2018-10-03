@@ -101,6 +101,10 @@ Devise.setup do |config|
 end
 ```
 
+Be sure to set all of your devise login failure messages to be the same otherwise an attack will know if the login credentials are correct depending on the failure message returned!
+
+See (test/dummy/config/locales/devise.en.yml)
+
 ## Requirements
 
 * Devise (https://github.com/plataformatec/devise)

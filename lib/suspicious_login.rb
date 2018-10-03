@@ -11,6 +11,7 @@ require 'devise'
 require 'suspicious_login/model'
 require 'suspicious_login/rails'
 require 'suspicious_login/strategies/token'
+require 'colorize'
 
 module Devise
   mattr_accessor :expire_login_token_after

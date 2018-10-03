@@ -6,3 +6,5 @@ en:
         other: "The following devise modules are missing from your model and have been automatically added -> :%{missing_modules}.\n\n"
       missing_model: "Model %{name} does not exist."
       devise_missing: "Devise not found on %{name}"
+    failure:
+      suspicious_login: "Your email or password are invalid, OR we need to verify your sign in. If you have received an email from us, please follow the instructions to complete your sign in."
