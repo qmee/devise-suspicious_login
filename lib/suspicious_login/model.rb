@@ -57,7 +57,7 @@ module Devise
         respond_to?(:suspicious_login_attempt?) ? suspicious_login_attempt?(request) || dormant_account?(request) : dormant_account?(request)
       end
 
-      def send_suspicious_login_instructions
+      def send_suspicious_login_instructions(request = {})
         send_devise_notification(:suspicious_login_instructions, nil, {})
       end
 
