@@ -31,6 +31,9 @@ module Devise
 
   mattr_accessor :clear_token_on_login
   @@clear_token_on_login = true
+
+  mattr_accessor :trigger_strategies
+  @@trigger_strategies = ["Devise::Strategies::DatabaseAuthenticatable"]
 end
 
 I18n.load_path.unshift File.join(File.dirname(__FILE__), *%w[suspicious_login locales en.yml])

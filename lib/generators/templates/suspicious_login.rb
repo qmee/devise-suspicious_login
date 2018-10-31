@@ -21,6 +21,9 @@ Devise.setup do |config|
   # Clear login_token after user login (true means each token can only be used once)
   # config.clear_token_on_login = true
 
+  # Login methods that should trigger a suspicious login (defaults to devise default login strategy)
+  #config.trigger_strategies = [Devise::Strategies::DatabaseAuthenticatable]
+
   config.warden do |manager|
   end
 end
