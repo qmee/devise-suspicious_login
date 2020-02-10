@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "devise", ">= 4"
   s.add_development_dependency "colorize"
-  s.add_development_dependency 'rails', '>= 5.0', '< 6.0'
+  s.add_development_dependency 'rails', '>= 5.0'
   s.add_development_dependency 'minitest'
   s.add_development_dependency "rake"
   s.add_development_dependency "sqlite3"
