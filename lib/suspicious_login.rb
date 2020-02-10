@@ -36,6 +36,6 @@ module Devise
   @@trigger_strategies = ["Devise::Strategies::DatabaseAuthenticatable"]
 end
 
-I18n.load_path.unshift File.join(File.dirname(__FILE__), *%w[suspicious_login locales en.yml])
+I18n.load_path.unshift File.join(File.split(File.dirname(__FILE__))[0], *%w[config locales en.yml])
 
 Devise.add_module :suspicious_login, model: "suspicious_login/model"
