@@ -58,7 +58,7 @@ module Devise
       end
 
       def send_suspicious_login_instructions(request = {})
-        send_devise_notification(:suspicious_login_instructions, nil, {})
+        send_devise_notification(:suspicious_login_instructions, nil, {}) unless Devise.skip_suspicious_login_email == true
       end
 
       def token_login?

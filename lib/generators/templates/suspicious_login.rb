@@ -21,6 +21,9 @@ Devise.setup do |config|
   # Clear login_token after user login (true means each token can only be used once)
   # config.clear_token_on_login = true
 
+  # Skips email initialisation and sending to implement custom logic by overwriting send_suspicious_login_instructions
+  # config.skip_suspicious_login_email = true
+
   # Login methods that should trigger a suspicious login (defaults to devise default login strategy)
   #config.trigger_strategies = [Devise::Strategies::DatabaseAuthenticatable]
 
