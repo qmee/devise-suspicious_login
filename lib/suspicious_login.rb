@@ -32,6 +32,9 @@ module Devise
   mattr_accessor :clear_token_on_login
   @@clear_token_on_login = true
 
+  mattr_accessor :skip_suspicious_login_email
+  @@skip_suspicious_login_email = false
+
   mattr_accessor :trigger_strategies
   @@trigger_strategies = ["Devise::Strategies::DatabaseAuthenticatable"]
 end

@@ -98,6 +98,9 @@ Devise.setup do |config|
 
   # Clear token on login (allows tokens to be one time use only)
   # config.clear_token_on_login = true
+
+  # Skips email initialisation and sending to implement custom logic by overwriting send_suspicious_login_instructions
+  # config.skip_suspicious_login_email = true
 end
 ```
 
